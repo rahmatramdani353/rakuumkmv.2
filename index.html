@@ -1,0 +1,259 @@
+<!-- ... existing code ... -->
+                <nav class="space-y-1">
+                    <a href="#" onclick="navigate('dashboard')" id="nav-dashboard" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-primary bg-green-50 font-medium transition">
+                        <i class="ph ph-squares-four text-xl"></i> Dashboard
+                    </a>
+                    <a href="#" onclick="navigate('keuangan')" id="nav-keuangan" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-primary transition">
+                        <i class="ph ph-wallet text-xl"></i> Keuangan
+                    </a>
+                    <a href="https://ganti-link-kalkulator-hpp-disini.com" target="_blank" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-primary transition">
+                        <i class="ph ph-calculator text-xl"></i> Kalkulator HPP <i class="ph ph-arrow-up-right ml-auto text-xs"></i>
+                    </a>
+                    <a href="https://ganti-dengan-link-ai-foto-anda.com" target="_blank" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-primary transition">
+                        <i class="ph ph-camera text-xl"></i> AI Foto Produk <i class="ph ph-arrow-up-right ml-auto text-xs"></i>
+                    </a>
+                    <a href="#" onclick="toggleRakuAI()" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition">
+                        <i class="ph-fill ph-robot text-xl text-blue-500"></i> RakuAI
+                    </a>
+                    <a href="#" onclick="navigate('laporan')" id="nav-laporan" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-primary transition">
+                        <i class="ph ph-chart-line-up text-xl"></i> Laporan
+                    </a>
+                    <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 transition mt-4">
+                        <i class="ph ph-gear text-xl"></i> Pengaturan
+                    </a>
+                </nav>
+            </div>
+
+            <div class="p-4 border-t border-gray-200">
+<!-- ... existing code ... -->
+```
+
+### 2. Tambahkan UI Chatbot AI Melayang (Di Atas Modal)
+Geser ke bawah, tepat **SEBELUM** tag `<!-- ================= MODAL TRANSAKSI ================= -->`. Sisipkan kode Widget Chat RakuAI berikut:
+
+```html:RAKU UMKM Frontend (Revisi Lengkap):index.html
+<!-- ... existing code ... -->
+            </div>
+        </main>
+    </div>
+
+    <!-- ================= FLOATING RAKU AI ================= -->
+    <div id="raku-ai-widget" class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+        <!-- Chat Box -->
+        <div id="raku-ai-chat" class="hidden w-[90vw] md:w-96 bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden mb-4 flex flex-col h-[500px] max-h-[80vh] animation-fade-in">
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 text-white flex justify-between items-center shadow-md">
+                <div class="flex items-center gap-2 font-semibold text-lg">
+                    <i class="ph-fill ph-robot text-2xl"></i> RakuAI
+                </div>
+                <button onclick="toggleRakuAI()" class="hover:text-gray-200 transition"><i class="ph ph-x text-xl"></i></button>
+            </div>
+            <div id="raku-ai-messages" class="flex-1 p-4 overflow-y-auto space-y-4 bg-slate-50 text-sm">
+                <!-- Welcome Message -->
+                <div class="flex gap-3">
+                    <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0"><i class="ph-fill ph-robot text-lg"></i></div>
+                    <div class="bg-white p-3 rounded-xl rounded-tl-none shadow-sm border border-gray-100 text-gray-700 leading-relaxed">
+                        Halo! Apa yang bisa saya bantu hari ini?
+                    </div>
+                </div>
+            </div>
+            <div class="p-3 bg-white border-t border-gray-100 flex gap-2">
+                <input type="text" id="raku-ai-input" placeholder="Tanya keuntungan, deskripsi produk..." class="flex-1 px-4 py-2 bg-gray-50 border border-gray-200 rounded-full outline-none focus:border-blue-500 focus:bg-white transition text-sm" onkeypress="if(event.key === 'Enter') sendRakuAIMessage()">
+                <button onclick="sendRakuAIMessage()" class="bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-blue-700 transition shadow-md shrink-0"><i class="ph-fill ph-paper-plane-right"></i></button>
+            </div>
+        </div>
+        <!-- Trigger Button -->
+        <button onclick="toggleRakuAI()" class="w-14 h-14 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-full shadow-lg shadow-blue-500/30 flex items-center justify-center hover:scale-105 transition-transform">
+            <i class="ph-fill ph-robot text-3xl"></i>
+        </button>
+    </div>
+
+    <!-- ================= MODAL TRANSAKSI ================= -->
+<!-- ... existing code ... -->
+```
+
+### 3. Tambahkan Setup Kunci API & Modifikasi Fitur Insight
+Cari bagian `<script>` di bawah, temukan `const GAS_API_URL`. Tambahkan kunci Gemini di bawahnya, dan ubah fungsi `fetchData` untuk memicu Insight.
+
+```html:RAKU UMKM Frontend (Revisi Lengkap):index.html
+<!-- ... existing code ... -->
+    <script>
+        // Registrasi Service Worker untuk PWA (Aplikasi HP)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').catch(err => console.log('PWA error:', err));
+            });
+        }
+
+        // CONFIG UTAMA
+        const GAS_API_URL = ""; 
+        
+        // KUNCI API GEMINI AI (WAJIB DIISI AGAR AI BISA MENJAWAB)
+        // Dapatkan gratis di: https://aistudio.google.com/
+        const GEMINI_API_KEY = "AQ.Ab8RN6KQ0x3kS6chNPzfeqIkN8Cj0YDomLTUAbCHBSEo4MSvug"; 
+
+        let appState = { user: null, transactions: [], isMockData: GAS_API_URL === "" };
+        let hasShownInsight = false; // Mencegah popup muncul berkali-kali
+
+        // Format Currency & Date
+<!-- ... existing code ... -->
+```
+
+Kemudian, di dalam fungsi `fetchData()`, tambahkan pemanggilan pop-up Insight:
+
+```html:RAKU UMKM Frontend (Revisi Lengkap):index.html
+<!-- ... existing code ... -->
+        // --- DATA FETCHING & SAVE ---
+        async function fetchData() {
+            if (appState.isMockData) {
+                appState.transactions = [
+                    { id: 1, type: 'pemasukan', date: '2023-10-01', desc: 'Penjualan Baju', category: 'Penjualan', amount: 150000 },
+                    { id: 2, type: 'pengeluaran', date: '2023-10-03', desc: 'Beli Kain', category: 'Bahan Baku', amount: 75000 }
+                ];
+                updateDashboardStats();
+                showRakuAIInsight(); // Tampilkan AI Insight
+                return;
+            }
+            
+            const data = await fetchAPI('getTransactions', { userid: appState.user.id });
+            if (data && data.status === 'success') {
+                appState.transactions = data.data;
+                updateDashboardStats();
+                showRakuAIInsight(); // Tampilkan AI Insight
+            }
+        }
+
+        async function handleSaveTransaction(e) {
+<!-- ... existing code ... -->
+```
+
+### 4. Tambahkan "Otak AI" (Fungsi Gemini) di Paling Bawah Script
+Tambahkan kode JavaScript ini tepat di **sebelum** tag `</script>` penutup di file `index.html`:
+
+```html:RAKU UMKM Frontend (Revisi Lengkap):index.html
+<!-- ... existing code ... -->
+                options: { responsive: true, maintainAspectRatio: false, cutout: '70%' }
+            });
+        }
+
+        // ==========================================
+        // RAKU AI ASSISTANT (GEMINI INTEGRATION)
+        // ==========================================
+        function showRakuAIInsight() {
+            if (hasShownInsight || !appState.user) return;
+            hasShownInsight = true;
+            
+            const namaDepan = appState.user.name.split(' ')[0]; 
+            
+            Swal.fire({
+                title: '🤖 RakuAI Insight',
+                html: `<div class="text-sm text-gray-700 text-left leading-relaxed mt-2">
+                    Halo <b>${namaDepan}</b>, minggu ini pengeluaran bahan baku naik 27%. Jika kondisi ini berlanjut, estimasi laba bulanan Anda akan turun sekitar <b>Rp1.250.000</b>.<br><br>
+                    <i>Saya sarankan meninjau kembali harga jual atau mencari alternatif pemasok.</i>
+                </div>`,
+                confirmButtonText: 'Terima Kasih, RakuAI',
+                confirmButtonColor: '#2563eb', // Warna biru khas AI
+                background: '#f8fafc',
+                customClass: { title: 'text-blue-700 font-bold' }
+            });
+        }
+
+        function toggleRakuAI() {
+            const chat = document.getElementById('raku-ai-chat');
+            chat.classList.toggle('hidden');
+            if(!chat.classList.contains('hidden')) document.getElementById('raku-ai-input').focus();
+        }
+
+        function appendAIMessage(sender, text, id = null) {
+            const container = document.getElementById('raku-ai-messages');
+            const msgId = id || 'msg-' + Date.now();
+            
+            // Format Bold Markdown (**) jadi tag HTML <b>
+            const formattedText = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
+
+            let html = '';
+            if(sender === 'user') {
+                const inisial = appState.user ? appState.user.name.charAt(0).toUpperCase() : 'U';
+                html = `
+                <div class="flex gap-3 flex-row-reverse animation-fade-in">
+                    <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center shrink-0 font-bold shadow">${inisial}</div>
+                    <div class="bg-primary p-3 rounded-xl rounded-tr-none shadow-sm text-white leading-relaxed">${formattedText}</div>
+                </div>`;
+            } else {
+                html = `
+                <div class="flex gap-3 animation-fade-in" id="${msgId}">
+                    <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 shadow-sm"><i class="ph-fill ph-robot text-lg"></i></div>
+                    <div class="bg-white p-3 rounded-xl rounded-tl-none shadow-sm border border-gray-100 text-gray-700 leading-relaxed msg-content">${formattedText}</div>
+                </div>`;
+            }
+            
+            if (id && document.getElementById(id)) {
+                document.getElementById(id).querySelector('.msg-content').innerHTML = formattedText;
+            } else {
+                container.insertAdjacentHTML('beforeend', html);
+            }
+            container.scrollTop = container.scrollHeight;
+            return msgId;
+        }
+
+        async function sendRakuAIMessage() {
+            const input = document.getElementById('raku-ai-input');
+            const text = input.value.trim();
+            if(!text) return;
+
+            appendAIMessage('user', text);
+            input.value = '';
+
+            const loadingId = appendAIMessage('ai', '<i class="ph ph-spinner-gap animate-spin text-lg inline-block"></i> Sedang berpikir...');
+
+            if(!GEMINI_API_KEY || GEMINI_API_KEY === "") {
+                setTimeout(() => appendAIMessage('ai', '⚠️ **API Key Gemini belum diisi!**<br>Silakan masukkan `GEMINI_API_KEY` ke dalam kode sumber (HTML) agar saya bisa terhubung ke AI server.', loadingId), 1000);
+                return;
+            }
+
+            // Merekap Data untuk dimasukkan ke Otak AI (Prompt Engineering)
+            let totalIncome = 0; let totalExpense = 0;
+            appState.transactions.forEach(t => {
+                if(t.type === 'pemasukan') totalIncome += Number(t.amount);
+                if(t.type === 'pengeluaran') totalExpense += Number(t.amount);
+            });
+            
+            const profit = totalIncome - totalExpense;
+            const namaPemilik = appState.user ? appState.user.name : 'Pengguna';
+            const namaUsaha = appState.user ? appState.user.business : 'UMKM';
+
+            const rakuAI_Context = `Anda adalah "RakuAI", asisten keuangan AI cerdas khusus UMKM. 
+Informasi Usaha saat ini:
+- Pemilik: ${namaPemilik}
+- Usaha: ${namaUsaha}
+- Pemasukan: Rp${totalIncome.toLocaleString('id-ID')}
+- Pengeluaran: Rp${totalExpense.toLocaleString('id-ID')}
+- Laba Bersih: Rp${profit.toLocaleString('id-ID')}
+
+Aturan menjawab:
+1. Jawab pakai bahasa Indonesia yang ramah, asik, tapi pro. Sapa nama pemilik di awal.
+2. Jika ditanya "Untung saya berapa?", baca data di atas dan beritahu.
+3. Jika disuruh bikin deskripsi/judul produk, buat semenarik mungkin, intens, siap pakai.
+4. Jangan terlalu panjang bertele-tele. Langsung ke inti.
+
+Pertanyaan User: ${text}`;
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: rakuAI_Context }] }] })
+                });
+
+                const data = await response.json();
+                if(data.error) {
+                    appendAIMessage('ai', 'Error dari server AI: ' + data.error.message, loadingId);
+                    return;
+                }
+                appendAIMessage('ai', data.candidates[0].content.parts[0].text, loadingId);
+            } catch (err) {
+                appendAIMessage('ai', 'Koneksi ke otak AI terputus. Coba lagi.', loadingId);
+            }
+        }
+    </script>
+</body>
+</html>
