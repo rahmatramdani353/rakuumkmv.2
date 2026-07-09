@@ -153,10 +153,10 @@
                     <a href="#" onclick="navigate('keuangan')" id="nav-keuangan" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-primary transition">
                         <i class="ph ph-wallet text-xl"></i> Keuangan
                     </a>
-                    <a href="https://ganti-link-kalkulator-hpp-disini.com" target="_blank" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-primary transition">
+                    <a href="https://gemini.google.com/share/9c16971e4e3e" target="_blank" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-primary transition">
                         <i class="ph ph-calculator text-xl"></i> Kalkulator HPP <i class="ph ph-arrow-up-right ml-auto text-xs"></i>
                     </a>
-                    <a href="https://ganti-dengan-link-ai-foto-anda.com" target="_blank" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-primary transition">
+                    <a href="https://gemini.google.com/share/a891573345b2" target="_blank" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-primary transition">
                         <i class="ph ph-camera text-xl"></i> AI Foto Produk <i class="ph ph-arrow-up-right ml-auto text-xs"></i>
                     </a>
                     <a href="#" onclick="toggleRakuAI()" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition">
@@ -407,11 +407,11 @@
         }
 
         // ================= CONFIG & API KEYS =================
-        // GANTI INI DENGAN URL APPS SCRIPT ANDA
-        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyfwuuwfmHhUgAJn0IL5c-CWOdBxu1seVKG5AYB5qbda34Di2Vp2kzUQYdNc7M2WZX_dw/exec"; 
+        // GANTI INI DENGAN URL APPS SCRIPT ANDA JIKA SUDAH ADA
+        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwP74a-iH-YQYI0L-KjD5n_q18GZzRjYyO2t-aVn/exec"; 
         
-        // KUNCI API GEMINI AI (SUDAH TERPASANG)
-        const GEMINI_API_KEY = "AQ.Ab8RN6KQ0x3kS6chNPzfeqIkN8Cj0YDomLTUAbCHBSEo4MSvug"; 
+        // KUNCI GEMINI AI DARI GOOGLE AI STUDIO (Telah dimasukkan otomatis)
+        const GEMINI_API_KEY = "AQ.Ab8RN6INX5shshFjN5SJTRlB4PV-Ld7r8VXsWgCW6d1q_hz70Q"; 
 
         // State Management
         let appState = { user: null, transactions: [], isMockData: GAS_API_URL === "" };
@@ -426,12 +426,12 @@
             if (savedUser) { appState.user = JSON.parse(savedUser); showApp(); }
         });
 
-        // ================= NETWORK HELPER (ANTI-GANTUNG) =================
+        // ================= NETWORK HELPER =================
         async function fetchAPI(action, data = {}) {
-            if(appState.isMockData) return null; // Bypass for mock data
+            if(appState.isMockData) return null;
             
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 detik batas waktu
+            const timeoutId = setTimeout(() => controller.abort(), 15000);
             
             try {
                 const response = await fetch(GAS_API_URL, {
@@ -441,7 +441,6 @@
                 });
                 
                 clearTimeout(timeoutId);
-
                 const textResp = await response.text();
                 
                 try {
@@ -453,7 +452,7 @@
                         title: 'Akses Ditolak / Server Error',
                         html: 'Pastikan di Apps Script:<br>1. "Who has access" diset <b>"Anyone"</b>.<br>2. Anda sudah <b>Deploy New Version</b>.<br><br><small class="text-gray-400">Pesan Sistem: Bukan JSON valid.</small>'
                     });
-                    throw new Error("Invalid JSON Format from Server");
+                    throw new Error("Invalid JSON Format");
                 }
             } catch (error) {
                 clearTimeout(timeoutId);
@@ -589,7 +588,7 @@
             const selectKat = document.getElementById('form-kat');
             
             document.getElementById('form-tipe').value = tipe;
-            document.getElementById('form-id').value = id; // Kosong jika tambah baru
+            document.getElementById('form-id').value = id; 
 
             if(tipe === 'pemasukan') {
                 modalTitle.innerText = id ? "Edit Pemasukan" : "Tambah Pemasukan";
@@ -620,8 +619,7 @@
             if (appState.isMockData) {
                 appState.transactions = [
                     { id: 't1', type: 'pemasukan', date: '2023-10-01', desc: 'Penjualan Baju', category: 'Penjualan', amount: 150000 },
-                    { id: 't2', type: 'pengeluaran', date: '2023-10-03', desc: 'Beli Kain', category: 'Bahan Baku', amount: 75000 },
-                    { id: 't3', type: 'pengeluaran', date: '2023-10-04', desc: 'Listrik', category: 'Tagihan', amount: 25000 }
+                    { id: 't2', type: 'pengeluaran', date: '2023-10-03', desc: 'Beli Kain', category: 'Bahan Baku', amount: 75000 }
                 ];
                 updateDashboardStats();
                 showRakuAIInsight();
@@ -654,20 +652,6 @@
                 amount: document.getElementById('form-nominal').value
             };
 
-            if(appState.isMockData) {
-                if(editId) {
-                    const idx = appState.transactions.findIndex(t => t.id == editId);
-                    if(idx > -1) appState.transactions[idx] = newData;
-                } else {
-                    appState.transactions.push(newData);
-                }
-                updateDashboardStats();
-                closeModal('modal-form');
-                Swal.fire({ icon: 'success', title: 'Tersimpan', timer: 1000, showConfirmButton: false });
-                btn.innerHTML = originalText; btn.disabled = false;
-                return;
-            }
-
             try {
                 const actionName = editId ? 'updateTransaction' : 'addTransaction';
                 const res = await fetchAPI(actionName, newData);
@@ -696,10 +680,7 @@
             
             document.getElementById('form-tanggal').value = item.date.split('T')[0];
             document.getElementById('form-ket').value = item.desc;
-            
-            // Set select option
             setTimeout(() => { document.getElementById('form-kat').value = item.category; }, 50);
-            
             document.getElementById('form-nominal').value = item.amount;
         }
 
@@ -715,13 +696,6 @@
             });
 
             if (result.isConfirmed) {
-                if(appState.isMockData) {
-                    appState.transactions = appState.transactions.filter(t => t.id != id);
-                    updateDashboardStats();
-                    Swal.fire({ icon: 'success', title: 'Dihapus', timer: 1000, showConfirmButton: false });
-                    return;
-                }
-
                 try {
                     const res = await fetchAPI('deleteTransaction', { id: id, type: type });
                     if(res && res.status === 'success') {
@@ -750,16 +724,13 @@
             document.getElementById('lap-laba').innerText = formatRp(totalIncome - totalExpense);
             
             renderTable();
-            if(!document.getElementById('view-dashboard').classList.contains('hidden')){
-                 initCharts();
-            }
+            if(!document.getElementById('view-dashboard').classList.contains('hidden')) initCharts();
         }
 
         function renderTable() {
             const tbody = document.getElementById(`table-keuangan`);
             if(!tbody) return;
             
-            // Urutkan dari yang terbaru
             const data = [...appState.transactions].sort((a,b) => new Date(b.date) - new Date(a.date));
             
             if(data.length === 0) {
@@ -792,18 +763,16 @@
             
             const incomeCategories = {}; const expenseCategories = {};
             
-            // Agregasi Data
             appState.transactions.forEach(t => {
                 if(t.type === 'pemasukan') incomeCategories[t.category] = (incomeCategories[t.category] || 0) + Number(t.amount);
                 if(t.type === 'pengeluaran') expenseCategories[t.category] = (expenseCategories[t.category] || 0) + Number(t.amount);
             });
 
-            // CHART 1: Arus Kas (Bar)
             if(cashflowChartObj) cashflowChartObj.destroy();
             cashflowChartObj = new Chart(document.getElementById('cashflowChart').getContext('2d'), {
                 type: 'bar',
                 data: { 
-                    labels: ['Trend Bulan Ini'], 
+                    labels: ['Trend Terakhir'], 
                     datasets: [
                         { label: 'Pemasukan', data: [Object.values(incomeCategories).reduce((a,b)=>a+b, 0)], backgroundColor: '#16A34A', borderRadius: 4 },
                         { label: 'Pengeluaran', data: [Object.values(expenseCategories).reduce((a,b)=>a+b, 0)], backgroundColor: '#ef4444', borderRadius: 4 }
@@ -812,7 +781,6 @@
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
             });
 
-            // CHART 2: Proporsi Pemasukan (Doughnut)
             if(incomeChartObj) incomeChartObj.destroy();
             incomeChartObj = new Chart(document.getElementById('incomeChart').getContext('2d'), {
                 type: 'doughnut',
@@ -823,7 +791,6 @@
                 options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { position: 'right', labels: { boxWidth: 12 } } } }
             });
 
-            // CHART 3: Proporsi Pengeluaran (Doughnut)
             if(expenseChartObj) expenseChartObj.destroy();
             expenseChartObj = new Chart(document.getElementById('expenseChart').getContext('2d'), {
                 type: 'doughnut',
@@ -835,7 +802,7 @@
             });
         }
 
-        // ================= EXPORT FITUR =================
+        // ================= EXPORT =================
         function exportToExcel() {
             if(appState.transactions.length === 0) return Swal.fire('Info', 'Tidak ada data untuk diexport', 'info');
             const excelData = appState.transactions.map(t => ({
@@ -852,13 +819,11 @@
             doc.setFontSize(11); doc.setTextColor(100); doc.text(`Dicetak oleh: ${appState.user.business} | Tanggal: ${formatDate(new Date())}`, 14, 30);
             
             const tableData = appState.transactions.map(t => [ formatDate(t.date), t.type === 'pemasukan' ? 'Pemasukan' : 'Pengeluaran', t.category, t.desc, formatRp(t.amount) ]);
-            doc.autoTable({
-                head: [['Tanggal', 'Tipe', 'Kategori', 'Keterangan', 'Nominal']], body: tableData, startY: 40, theme: 'grid', headStyles: { fillColor: [22, 163, 74] }
-            });
+            doc.autoTable({ head: [['Tanggal', 'Tipe', 'Kategori', 'Keterangan', 'Nominal']], body: tableData, startY: 40, theme: 'grid', headStyles: { fillColor: [22, 163, 74] } });
             doc.save("Laporan_RAKU_UMKM.pdf");
         }
 
-        // ================= RAKU AI ASSISTANT (GEMINI) =================
+        // ================= RAKU AI ASSISTANT =================
         function showRakuAIInsight() {
             if (hasShownInsight || !appState.user) return;
             hasShownInsight = true;
@@ -893,7 +858,6 @@
             const container = document.getElementById('raku-ai-messages');
             const msgId = id || 'msg-' + Date.now();
             
-            // Format Bold Markdown (**) jadi tag HTML <b>
             const formattedText = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
 
             let html = '';
@@ -931,12 +895,12 @@
 
             const loadingId = appendAIMessage('ai', '<i class="ph ph-spinner-gap animate-spin text-lg inline-block"></i> Sedang berpikir...');
 
-            if(!GEMINI_API_KEY || GEMINI_API_KEY === "") {
-                setTimeout(() => appendAIMessage('ai', '⚠️ **API Key Gemini belum diisi!**', loadingId), 1000);
+            // CEK KUNCI (DIREVISI: Sekarang menerima format "AQ." dan "AIza")
+            if(!GEMINI_API_KEY || GEMINI_API_KEY === "" || GEMINI_API_KEY.includes("PASTE_API_KEY")) {
+                setTimeout(() => appendAIMessage('ai', '⚠️ **API Key Gemini belum diisi!** Silakan masukkan API Key Anda di dalam kode (const GEMINI_API_KEY).', loadingId), 1000);
                 return;
             }
 
-            // Merekap Data untuk dimasukkan ke Otak AI (Prompt Engineering)
             let totalIncome = 0; let totalExpense = 0;
             appState.transactions.forEach(t => {
                 if(t.type === 'pemasukan') totalIncome += Number(t.amount);
@@ -954,10 +918,10 @@ Data terkini pengguna:
 - Pengeluaran: Rp${totalExpense.toLocaleString('id-ID')}
 - Laba Bersih: Rp${profit.toLocaleString('id-ID')}
 
-Tugas & Gaya Bahasa:
-1. Jawab pakai bahasa Indonesia yang sangat asik, suportif, pro, dan singkat. Sapa pemilik di awal jika relevan.
+Tugas:
+1. Jawab pakai bahasa Indonesia yang asik, suportif, pro, dan singkat. Sapa pemilik di awal.
 2. Jika ditanya soal keuangan, baca data di atas.
-3. Jika disuruh buat copywriting, ide produk, atau judul sosmed, buat seintens dan semenarik mungkin.
+3. Jika disuruh buat copywriting/ide produk, buat semenarik mungkin.
 4. Gunakan markdown bold (**) untuk highlight.
 
 Pertanyaan User: ${text}`;
@@ -970,12 +934,27 @@ Pertanyaan User: ${text}`;
                 });
 
                 const data = await response.json();
+                
+                // ERROR HANDLING
                 if(data.error) {
-                    appendAIMessage('ai', 'Waduh, server AI sedang sibuk. Coba tanya lagi ya.', loadingId);
+                    console.error("Gemini API Error:", data.error);
+                    let errMsg = 'Waduh, server AI sedang sibuk. Coba tanya lagi ya.';
+                    
+                    if(data.error.message.includes('API key not valid')) {
+                        errMsg = '⚠️ **API Key ditolak Google!** Kunci yang Anda masukkan salah atau belum aktif.';
+                    } else if(data.error.code === 429) {
+                        errMsg = '⚠️ **Batas gratis AI tercapai.** Harap tunggu beberapa saat lalu coba lagi.';
+                    } else {
+                        errMsg = `⚠️ **Error AI:** ${data.error.message}`;
+                    }
+                    
+                    appendAIMessage('ai', errMsg, loadingId);
                     return;
                 }
+                
                 appendAIMessage('ai', data.candidates[0].content.parts[0].text, loadingId);
             } catch (err) {
+                console.error("Fetch Error:", err);
                 appendAIMessage('ai', 'Yah, koneksi ke otak AI terputus. Pastikan sinyal bagus dan coba lagi.', loadingId);
             }
         }
