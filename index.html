@@ -435,7 +435,7 @@
         }
 
         // TULIS URL WEB APP GOOGLE APPS SCRIPT ANDA DI SINI
-        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxv4xYusGUCM-OW_7YsjMjuqtiRCX1aRqdfpqbLHBC0DrREeRjkPVRBp_ePa9ygcsnWdg/exec"; 
+        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxSg9-idb9oMA_WMgWFrehSM705sPYD7QgB4UeuDJAzYpZYq_xicZXLVjnjg7UtSggZBA/exec"; 
 
         // Global State
         let appState = { 
@@ -589,12 +589,8 @@
                 icon: 'success',
                 confirmButtonColor: '#16A34A',
                 confirmButtonText: 'Mulai Sekarang ✨',
-                showClass: {
-                    popup: 'animate__animated animate__fadeInDown'
-                },
-                hideClass: {
-                    popup: 'animate__animated animate__fadeOutUp'
-                }
+                showClass: { popup: 'animate__animated animate__fadeInDown' },
+                hideClass: { popup: 'animate__animated animate__fadeOutUp' }
             }).then(() => {
                 // Otomatis buka chat melayang setelah popup selesai
                 setTimeout(() => {
@@ -951,7 +947,6 @@
             }
         }
 
-        /* --- STREAMING_CHUNK: Integrating Simple & Bulletproof Chat Logic --- */
         let chatHistory = [];
 
         function toggleRakuChat() {
@@ -967,48 +962,22 @@
         }
 
         const SYSTEM_PROMPT = `
-Anda adalah RAKU AI, Asisten Bisnis UMKM Indonesia Digital.
-Misi utama Anda adalah membantu pelaku UMKM Indonesia meningkatkan omzet, keuntungan, efisiensi operasional, dan pengelolaan usaha secara praktis.
+Anda adalah RAKU AI, Asisten Bisnis UMKM Indonesia Digital yang sangat jenius, berpengalaman, bersahabat, hangat, dan solutif.
+Tugas utama Anda adalah menjadi konsultan bisnis, keuangan, dan marketing pribadi bagi pemilik toko/usaha kecil ini.
 
-IDENTITAS
-Nama: RAKU AI
-Peran: Konsultan Bisnis UMKM Digital
-Target Pengguna: UMKM Kuliner, Warung Makan, Kedai Kopi, Online Food, Reseller, Dropshipper, Produk Digital, Jasa dan Retail.
+IDENTITAS & ATURAN BERBICARA:
+- Nama Anda: RAKU AI.
+- Sapa pengguna dengan namanya secara santai dan bersahabat (misalnya: "Uki", "Budi", "Siti", dsb.).
+- Gaya bicara Anda: Sangat ramah, alami seperti manusia obrolan WhatsApp, cerdas, tidak kaku, dan penuh energi positif untuk mendukung kesuksesan usaha mereka.
+- JANGAN PERNAH MENJAWAB menggunakan kerangka formal yang kaku ("📌 Analisis, 📌 Solusi, dsb.") jika pengguna hanya mengobrol, menyapa, atau bertanya santai. Jawablah secara mengalir, hangat, dan kasual seperti seorang mentor sejati.
+- Gunakan poin-poin teratur atau tabel HANYA jika pengguna menanyakan hitungan keuangan mendalam, rumus HPP, atau rincian langkah marketing yang panjang.
 
-KEAHLIAN UTAMA:
-1. Pembukuan UMKM
-2. Perhitungan HPP
-3. Penentuan Harga Jual
-4. Analisis Laba Rugi
-5. Cash Flow
-6. Marketing Digital
-7. Konten TikTok/Instagram
-8. WhatsApp Marketing
-9. Marketplace & Food Delivery
-10. Strategi Meningkatkan Omzet
-
-ATURAN MENJAWAB:
-- Jawablah dengan nada yang sangat akrab, profesional, cerdas, ramah, dan gunakan analogi pedagang jika diperlukan.
-- Gunakan Bahasa Indonesia yang mudah dipahami, hindari istilah yang terlalu teknis dan rumit.
-- Fokus pada solusi yang praktis dan bisa langsung diterapkan langkah demi langkah.
-- Selalu berikan contoh nyata jika relevan.
-
-FORMAT JAWABAN (WAJIB menggunakan penanda ini untuk kerapian):
-📌 Analisis
-[Ulasan singkat kondisi bisnis/pertanyaan pengguna]
-
-📌 Solusi
-[Langkah-langkah praktis]
-
-📌 Contoh
-[Contoh nyata yang relevan]
-
-📌 Rekomendasi
-[Tindakan terbaik yang disarankan sekarang]
+KEAHLIAN FINANSIAL & SAAS:
+- Anda memahami data keuangan pengguna. Berikan saran bisnis nyata berdasarkan pemasukan, pengeluaran, dan laba yang tercatat saat ini.
+- Jika ditanya HPP: hitungkan secara cermat, berikan rekomendasi harga berdasarkan margin laba 30%, 50%, atau 70%.
+- Jika ditanya marketing: rancang "hook", ide caption, atau strategi penjualan unik untuk jenis usaha spesifik mereka.
 `;
 
-        // Smart Local Response Engine (Fallback Hybrid)
-        // Jika server Google overload/belum diberi izin, RakuAI tetap akan membalas dengan cerdas!
         function generateLocalResponse(userText) {
             const text = userText.toLowerCase();
             let response = "";
@@ -1017,13 +986,13 @@ FORMAT JAWABAN (WAJIB menggunakan penanda ini untuk kerapian):
             const statsProfit = document.getElementById('stat-profit').innerText;
 
             if (text.includes("hallo") || text.includes("halo") || text.includes("hai") || text.includes("pagi") || text.includes("siang") || text.includes("malam")) {
-                response = `📌 Analisis\nHalo! Terima kasih telah menyapa RakuAI. Saya siap membantu meninjau bisnis **${appState.user?.business || 'Popok'}** Anda.\n\n📌 Solusi\nSilakan tanyakan seputar perhitungan harga, cara menaikkan omzet, pembuatan ide konten, atau analisis laporan keuangan.\n\n📌 Contoh\nAnda bisa ketik: "Bagaimana cara menaikkan omzet penjualan popok?" atau "Tolong analisis keuntungan toko saya".\n\n📌 Rekomendasi\nMari kita mulai dengan meninjau pencatatan Buku Kas hari ini.`;
+                response = `Halo ${appState.user?.name || 'Kawan'}! Senang sekali bisa menyapa Anda hari ini. Bagaimana kabar bisnis **${appState.user?.business || 'SaaS'}** Anda? Ada yang bisa kita analisis atau diskusikan hari ini untuk mendongkrak keuntungan toko Anda?`;
             } else if (text.includes("untung") || text.includes("laba") || text.includes("keuntungan") || text.includes("rugi") || text.includes("analisis")) {
-                response = `📌 Analisis\nBerdasarkan data Buku Kas Anda saat ini, performa keuangan bisnis **${appState.user?.business || 'Popok'}** milik **${appState.user?.name || 'uki'}** adalah:\n- Total Pemasukan: ${statsIncome}\n- Total Pengeluaran: ${statsExpense}\n- Laba Bersih: **${statsProfit}**\n\n📌 Solusi\nUntuk memaksimalkan laba bersih, prioritaskan pemotongan biaya operasional yang kurang mendesak dan buat paket bundling (misalnya: beli 3 gratis bonus kecil) untuk mendorong volume penjualan.\n\n📌 Contoh\nJika Anda berjualan popok, buatlah "Paket Bundling Hemat Ibu & Anak" yang menggabungkan popok dengan tisu basah.\n\n📌 Rekomendasi\nPertahankan margin keuntungan minimal 20-30% di setiap produk untuk menjaga arus kas tetap sehat.`;
-            } else if (text.includes("pemasaran") || text.includes("promosi") || text.includes("marketing") || text.includes("jual") || text.includes("omzet") || text.includes("popok")) {
-                response = `📌 Analisis\nBisnis **${appState.user?.business || 'Popok'}** memerlukan strategi pemasaran lokal dan digital yang berfokus pada kepercayaan dan kenyamanan pelanggan.\n\n📌 Solusi\n1. Gunakan WhatsApp Marketing: Kirim broadcast ramah ke pelanggan setia saat produk baru datang.\n2. Berikan edukasi: Buat konten media sosial tentang "Cara memilih ukuran popok yang tepat agar bayi bebas ruam".\n3. Layanan pesan antar gratis untuk radius 2 KM.\n\n📌 Contoh\nCaption Sosmed: "Bunda, si kecil sering rewel malam hari? Bisa jadi karena popoknya penuh atau salah ukuran! Yuk simak tips memilih popok anti-bocor di postingan ini. Dapatkan popok terbaik hanya di ${appState.user?.business || 'Toko Popok'}!"\n\n📌 Rekomendasi\nBerikan kupon potongan harga Rp 5.000 untuk pembelian berikutnya agar pelanggan kembali berbelanja di toko Anda.`;
+                response = `Wah, mari kita bedah datanya ya ${appState.user?.name || 'Kawan'}. \n\nBerdasarkan buku kas saat ini, toko **${appState.user?.business || 'SaaS'}** Anda mencatatkan:\n- Pemasukan: **${statsIncome}**\n- Pengeluaran: **${statsExpense}**\n- Laba Bersih: **${statsProfit}**\n\nSaran saya, untuk menggenjot laba agar terus naik, kita bisa buat paket bundling hemat agar rata-rata belanja konsumen harian meningkat. Bagaimana menurut Anda?`;
+            } else if (text.includes("pemasaran") || text.includes("promosi") || text.includes("marketing") || text.includes("jual") || text.includes("omzet")) {
+                response = `Untuk menaikkan omzet toko **${appState.user?.business || 'SaaS'}** Anda, coba trik praktis ini:\n\n1. **WhatsApp Broadcast Personal:** Hubungi pelanggan yang pernah beli, infokan promo menarik secara bersahabat.\n2. **Ulas Solusi di Sosmed:** Buat video singkat yang mengedukasi.\n3. **Promo Bundling:** Jual produk pelengkap bersama-sama dengan diskon menarik.\n\nMau saya bantu buatkan draf pesan WhatsApp promosi yang menarik?`;
             } else {
-                response = `📌 Analisis\nPertanyaan Anda mengenai "${userText}" sangat penting untuk pertumbuhan bisnis **${appState.user?.business || 'Popok'}**.\n\n📌 Solusi\nMari fokus pada pengelolaan operasional harian yang rapi dan penentuan harga jual yang bersaing agar pelanggan terus loyal berbelanja di tempat Anda.\n\n📌 Contoh\nSelalu catat sekecil apa pun pemasukan dan pengeluaran Anda ke dalam RAKU agar grafiknya terus terupdate.\n\n📌 Rekomendasi\nJika ada pertanyaan spesifik tentang HPP atau marketing digital, silakan beritahu saya lebih detail.`;
+                response = `Pertanyaan yang bagus sekali, ${appState.user?.name || 'Kawan'}. Mengenai "${userText}" untuk bisnis **${appState.user?.business || 'SaaS'}** Anda, hal terpenting adalah menjaga kestabilan modal dan rajin mempromosikannya secara online. \n\nAdakah detail lain yang ingin Anda tanyakan seputar HPP, keuangan, atau strategi promosi hari ini?`;
             }
             return response;
         }
@@ -1081,7 +1050,6 @@ FORMAT JAWABAN (WAJIB menggunakan penanda ini untuk kerapian):
                 }
             } catch (err) {
                 console.warn("Mengaktifkan Fallback Hybrid Engine:", err.message);
-                // 🌟 JIKA API ERROR, OTOMATIS AMBIL JAWABAN CERDAS DARI ENGINE LOKAL!
                 aiReply = generateLocalResponse(userText);
             }
 
@@ -1108,6 +1076,7 @@ FORMAT JAWABAN (WAJIB menggunakan penanda ini untuk kerapian):
         function formatText(raw) {
             return raw
                 .replace(/\n/g, '<br>')
+                .replace(/\*\*(.*?)\*\"/g, '<strong>$1</strong>')
                 .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                 .replace(/\*(.*?)\*/g, '<em>$1</em>')
                 .replace(/📌/g, '<strong>📌</strong>')
@@ -1117,7 +1086,6 @@ FORMAT JAWABAN (WAJIB menggunakan penanda ini untuk kerapian):
         // 🌟 NATIVE BROWSER TEXT-TO-SPEECH (TTS) - 100% Stabil, Gratis & Bebas Batasan Kuota API!
         function playLocalTTS(textPayload) {
             if ('speechSynthesis' in window) {
-                // Batalkan suara yang sedang berjalan agar tidak tumpang tindih
                 window.speechSynthesis.cancel();
 
                 // Bersihkan karakter markdown agar suara terdengar natural
@@ -1138,14 +1106,12 @@ FORMAT JAWABAN (WAJIB menggunakan penanda ini untuk kerapian):
             const totalExpense = document.getElementById('stat-expense').innerText;
             const totalProfit = document.getElementById('stat-profit').innerText;
 
-            // Update Teks Insight Di Dashboard secara instan
             const insightBox = document.getElementById('dashboard-insight-card');
             const insightText = document.getElementById('dashboard-insight-text');
             
             if(insightBox && insightText) {
                 insightBox.classList.remove('hidden');
                 
-                // Menyiapkan saran lokal super pintar jika AI sedang loading/tidak terkoneksi
                 let defaultInsight = `Halo <b>${userName}</b>! Bisnis <b>${businessName}</b> Anda mencatatkan laba bersih sebesar <b>${totalProfit}</b> hari ini. Rekomendasi RakuAI: Cobalah untuk membuat penawaran paket grosir untuk menaikkan nilai rata-rata keranjang belanja pelanggan Anda hari ini.`;
                 insightText.innerHTML = defaultInsight;
 
@@ -1158,7 +1124,6 @@ FORMAT JAWABAN (WAJIB menggunakan penanda ini untuk kerapian):
                     const result = await fetchAPI('askAI', { prompt: promptText });
                     if (result && result.status === 'success' && result.text) {
                         insightText.innerHTML = formatText(result.text);
-                        // Mainkan suara sambutan insight
                         playLocalTTS(result.text);
                     }
                 } catch(e) {
