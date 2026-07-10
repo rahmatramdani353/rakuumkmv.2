@@ -370,13 +370,13 @@
         }
 
         // TAUTKAN URL APPS SCRIPT ANDA DI SINI (Berakhiran /exec)
-        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyg8OxYiqY4af9jLtxhqvD6WNFc8F-_2hxIzVOo4v7FCNNjzEWhp-vkQHPYtdmhCTtSSg/exec"; 
+        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxoK755O6K9f63vH7Z3GfD4K0uM9G_79fN_B5Xb7g/exec"; 
 
         // Global State
         let appState = { 
             user: null, 
             transactions: [], 
-            isMockData: GAS_API_URL === "" 
+            isMockData: GAS_API_URL === "https://script.google.com/macros/s/AKfycbwyG7caH84FVrCLZtsdePEyaDzFXbBWyNRiJBFp9oE-RU_VKdbMBgwIpmZlT78BLhTZ5g/exec" 
         };
 
         // Format Helper
@@ -1215,7 +1215,7 @@ FORMAT JAWABAN:
         subtitle: "Asisten UMKM Indonesia",
         color: "#10b981",
         welcomeMsg: "Halo! Saya RAKU AI, asisten bisnis UMKM Anda. Ada yang bisa saya bantu untuk meningkatkan keuntungan usaha Anda hari ini?",
-        apiKey: "YOUR_GEMINI_API_KEY_HERE",
+        apiKey: "AQ.Ab8RN6Is4VqpPQTn_aA2ijp56fr5e9L0NGQJy-ftp4pAGeiAbg",
         ttsEnabled: true
     };
 
@@ -1405,7 +1405,14 @@ FORMAT JAWABAN:
             });
 
             const data = await response.json();
-            const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Maaf, saat ini RAKU AI sedang sibuk. Silakan coba lagi nanti.";
+            
+            // Check for API Error
+            if (!response.ok || data.error) {
+                const apiErrorMsg = data.error?.message || "Respons tidak valid dari server API.";
+                throw new Error(apiErrorMsg);
+            }
+
+            const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Maaf, tidak mendapatkan respon dari sistem.";
 
             // Save Bot response to local memory
             history.push({ role: 'model', parts: [{ text: reply }] });
@@ -1431,13 +1438,16 @@ FORMAT JAWABAN:
         } catch (error) {
             console.error(error);
             typingIndicator.style.display = 'none';
-            const errorMsg = document.createElement('div');
-            errorMsg.className = 'raku-msg-wrapper raku-msg-bot';
-            errorMsg.innerHTML = `
+            const botMsg = document.createElement('div');
+            botMsg.className = 'raku-msg-wrapper raku-msg-bot';
+            botMsg.innerHTML = `
                 <div class="raku-avatar" style="background: red; color: white;">!</div>
-                <div class="raku-bubble raku-bubble-bot">Gagal terhubung dengan RAKU AI. Mohon periksa API Key Anda.</div>
+                <div class="raku-bubble raku-bubble-bot" style="border-color: #ef4444; color: #fca5a5;">
+                    <strong>Gagal Terhubung:</strong> ${error.message}<br><br>
+                    <span style="font-size:11px; color:#94a3b8;">Silakan periksa kembali konfigurasi API Key di website Anda.</span>
+                </div>
             `;
-            messages.appendChild(errorMsg);
+            messages.appendChild(botMsg);
             messages.scrollTop = messages.scrollHeight;
         }
     }
