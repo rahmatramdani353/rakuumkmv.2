@@ -222,6 +222,20 @@
                 
                 <!-- DASHBOARD VIEW -->
                 <section id="view-dashboard" class="view-section active">
+                    
+                    <!-- Dynamic Insight Card (RakuAI Analisis Otomatis) -->
+                    <div id="dashboard-insight-card" class="bg-gradient-to-r from-emerald-500 to-green-600 p-5 rounded-2xl border-none mb-6 flex flex-col sm:flex-row items-start gap-4 shadow-lg text-white">
+                        <div class="w-12 h-12 rounded-xl bg-white/20 text-white flex items-center justify-center text-2xl shrink-0 shadow-md">
+                            <i class="ph ph-sparkle animate-pulse"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-bold text-sm mb-1">RakuAI Insight Terkini 💡</h4>
+                            <p id="dashboard-insight-text" class="text-xs leading-relaxed opacity-90">
+                                Sedang menghubungkan ke server asisten bisnis Anda...
+                            </p>
+                        </div>
+                    </div>
+
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                         <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
                             <div>
@@ -415,7 +429,8 @@
             });
         }
 
-        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwr4Aki7lkZd8Hv7PoptxqCWKI8bgeXPyCsz-Jq5T4kY748gkFarHbZn-I6xtRoTDhdUg/exec"; // Masukkan URL deployment Apps Script Anda
+        // TAUTKAN URL APPS SCRIPT ANDA DI SINI
+        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzKCg2ufZbQO3PK6BSlSj1Acc-a_2y7lXfEtaiAqzZapaXroaP6a49CeUDIp2qj0qjRwA/exec"; 
 
         // Global State
         let appState = { 
@@ -815,7 +830,7 @@
             }));
             const ws = XLSX.utils.json_to_sheet(excelData);
             const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Laporan Keuangan");
+            Xcontent_to_sheet = XLSX.utils.book_append_sheet(wb, ws, "Laporan Keuangan");
             XLSX.writeFile(wb, "Laporan_RAKU_UMKM.xlsx");
         }
 
@@ -1036,7 +1051,7 @@ FORMAT JAWABAN (WAJIB menggunakan penanda ini untuk kerapian):
                     // Picu Pengeras Suara Suara AI (TTS) secara aman lewat server backend
                     playAITTS(aiReply);
                 } else {
-                    throw new Error(response.message || "Gagal mendapat respons.");
+                    throw new Error(response.message || "Gagal mendapat respons dari server.");
                 }
 
             } catch (err) {
@@ -1045,9 +1060,16 @@ FORMAT JAWABAN (WAJIB menggunakan penanda ini untuk kerapian):
                 
                 const botErrorMsg = document.createElement('div');
                 botErrorMsg.className = 'raku-msg-wrapper raku-msg-bot';
+                
+                // MENAMPILKAN PESAN ERROR ASLI DARI APPS SCRIPT
                 botErrorMsg.innerHTML = `
                     <div class="raku-avatar bg-red-500 text-white">!</div>
-                    <div class="raku-bubble raku-bubble-bot text-red-400">Gagal terhubung dengan RAKU AI. Mohon pastikan deployment Apps Script Anda sudah aktif dan online.</div>
+                    <div class="raku-bubble raku-bubble-bot border border-red-500 text-red-300">
+                        <strong>⚠️ Gagal memanggil AI:</strong><br>
+                        <span class="text-xs text-red-400">${err.message}</span>
+                        <br><br>
+                        <span class="text-[11px] text-gray-400">Tips: Pastikan Google Apps Script Anda telah dideploy sebagai 'New Version' dan disetel ke 'Anyone'.</span>
+                    </div>
                 `;
                 msgsContainer.appendChild(botErrorMsg);
                 msgsContainer.scrollTop = msgsContainer.scrollHeight;
@@ -1058,6 +1080,7 @@ FORMAT JAWABAN (WAJIB menggunakan penanda ini untuk kerapian):
         function formatText(raw) {
             return raw
                 .replace(/\n/g, '<br>')
+                .replace(/\*\*(.*?)\*\"/g, '<strong>$1</strong>')
                 .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                 .replace(/\*(.*?)\*/g, '<em>$1</em>')
                 .replace(/📌/g, '<strong>📌</strong>')
@@ -1105,17 +1128,30 @@ FORMAT JAWABAN (WAJIB menggunakan penanda ini untuk kerapian):
             const totalExpense = document.getElementById('stat-expense').innerText;
             const totalProfit = document.getElementById('stat-profit').innerText;
 
-            const promptText = `Berikan 1 paragraf ringkas berisi analisis keuangan yang cerdas, personal, tajam, dan penuh kehangatan sapaan akrab untuk UMKM Indonesia. Sapa nama pemilik di awal analisis tersebut secara bersahabat.\n` +
+            const promptText = `Berikan analisis keuangan yang sangat tajam, personal, dan penuh sapaan hangat untuk pelaku UMKM Indonesia. Sapa nama pemilik (${userName}) di awal analisis tersebut secara akrab.\n` +
                                `- Nama Pemilik: ${userName}\n` +
                                `- Nama Usaha: ${businessName}\n` +
                                `- Total Pemasukan: ${totalIncome}\n` +
                                `- Total Pengeluaran: ${totalExpense}\n` +
                                `- Laba Bersih Toko Saat Ini: ${totalProfit}\n\n` +
-                               `Gunakan gaya bicara penuh empati dan tawarkan solusi praktis seakan Anda adalah asisten pribadinya. Contoh: "Rahmat, minggu ini pengeluaran..."`;
+                               `Gaya berbicara Anda harus empati dan langsung memberikan evaluasi rasional terhadap untung toko tersebut, serta menyarankan solusi peningkatan operasional secara spesifik. Berikan contoh konkrit. Maksimal 3 kalimat. Format sapaan seperti: "${userName}, minggu ini..."`;
+
+            const insightText = document.getElementById('dashboard-insight-text');
+            if (insightText) {
+                insightText.innerHTML = `<span class="animate-pulse opacity-80">RakuAI sedang menganalisis laporan kas toko Anda...</span>`;
+            }
 
             try {
                 const result = await fetchAPI('askAI', { prompt: promptText });
                 if (result.status === 'success' && result.text) {
+                    const aiResultText = result.text.trim();
+                    
+                    // 1. Tampilkan di Kartu Dashboard Utama
+                    if (insightText) {
+                        insightText.innerHTML = formatText(aiResultText);
+                    }
+
+                    // 2. Kirim otomatis ke widget RakuAI Chatbox
                     const chatBoxMessages = document.getElementById('raku-messages');
                     if (chatBoxMessages) {
                         chatBoxMessages.innerHTML += `
@@ -1123,18 +1159,23 @@ FORMAT JAWABAN (WAJIB menggunakan penanda ini untuk kerapian):
                                 <div class="raku-avatar bg-blue-500 text-white">💡</div>
                                 <div class="raku-bubble raku-bubble-bot border border-blue-900 bg-[#0f172a] text-blue-200">
                                     <strong class="block text-xs text-[#10b981] mb-1">RakuAI Insight Terkini 💡</strong>
-                                    ${result.text.replace(/\n/g, '<br>')}
+                                    ${formatText(aiResultText)}
                                 </div>
                             </div>
                         `;
                         chatBoxMessages.scrollTop = chatBoxMessages.scrollHeight;
                         
                         // Mainkan suara Insight saat pertama kali muncul!
-                        playAITTS(result.text);
+                        playAITTS(aiResultText);
                     }
+                } else {
+                    throw new Error(result.message || "Gagal memproses insight.");
                 }
             } catch(e) {
                 console.warn("Gagal merangkum AI insight awal", e);
+                if (insightText) {
+                    insightText.innerHTML = `<span class="text-red-200">Gagal memuat analisis keuangan otomatis. Hubungkan backend dengan benar terlebih dahulu. Error: ${e.message}</span>`;
+                }
             }
         }
 
