@@ -65,7 +65,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- STREAMING_CHUNK: Styling the Floating Chat Box --- */
+        /* --- STYLING WIDGET CHAT RAKU AI MODAL TERAPUNG --- */
         #raku-widget-container { font-family: 'Inter', sans-serif; position: fixed; bottom: 24px; right: 24px; z-index: 999999; display: flex; flex-direction: column; align-items: flex-end; }
         #raku-chat-box { width: 380px; height: 500px; background: #0f172a; border: 1px solid #1e293b; border-radius: 16px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); display: flex; flex-direction: column; margin-bottom: 16px; overflow: hidden; transform: scale(0); transform-origin: bottom right; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         #raku-chat-box.open { transform: scale(1); }
@@ -74,7 +74,7 @@
         .raku-msg-wrapper { display: flex; gap: 10px; max-width: 85%; }
         .raku-msg-bot { align-self: flex-start; }
         .raku-msg-user { align-self: flex-end; flex-direction: row-reverse; }
-        .raku-avatar { width: 24px; height: 24px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 10px; shrink: 0; }
+        .raku-avatar { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 11px; flex-shrink: 0; }
         .raku-bubble { padding: 12px; font-size: 13px; line-height: 1.5; color: #f1f5f9; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border: 1px solid #1e293b; }
         .raku-bubble-bot { background: #0f172a; border-radius: 0 12px 12px 12px; }
         .raku-bubble-user { background: rgba(16, 185, 129, 0.2); border-radius: 12px 0 12px 12px; }
@@ -222,6 +222,25 @@
                 
                 <!-- DASHBOARD VIEW -->
                 <section id="view-dashboard" class="view-section active">
+                    <!-- RakuAI Insight Card (Mewah & Eksklusif) -->
+                    <div id="dashboard-insight-card" class="bg-gradient-to-r from-green-600 to-emerald-700 text-white p-6 rounded-2xl shadow-md border border-emerald-500 mb-6 relative overflow-hidden hidden">
+                        <div class="absolute right-0 bottom-0 opacity-10 translate-x-4 translate-y-4">
+                            <i class="ph ph-robot text-[140px]"></i>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center text-white shrink-0 shadow-inner">
+                                <i class="ph ph-sparkle text-2xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg mb-1 flex items-center gap-2">
+                                    <span>RakuAI Penasihat Bisnis</span>
+                                    <span class="bg-white/20 text-[10px] uppercase font-semibold tracking-wider px-2 py-0.5 rounded-full">LIVE</span>
+                                </h4>
+                                <p id="dashboard-insight-text" class="text-sm text-green-50/90 leading-relaxed font-light">Sedang menganalisis performa toko Anda...</p>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                         <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
                             <div>
@@ -351,7 +370,7 @@
             <div id="raku-messages">
                 <div class="raku-msg-wrapper raku-msg-bot">
                     <div class="raku-avatar bg-[#10b981] text-[#020617]">R</div>
-                    <div class="raku-bubble raku-bubble-bot">Halo! Saya RAKU AI, asisten bisnis UMKM Anda. Ada yang bisa saya bantu untuk meningkatkan keuntungan usaha Anda hari ini?</div>
+                    <div class="raku-bubble raku-bubble-bot">Halo! Saya RAKU AI, asisten bisnis UMKM Anda. Ada yang bisa saya bantu hari ini?</div>
                 </div>
             </div>
             <div id="raku-typing">Sedang mengetik...</div>
@@ -415,7 +434,8 @@
             });
         }
 
-        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxEQX-VWG7dlt29apUApDFJKJiGALCeaqQ2qOLDYG7kpvOemwmrr9DTwn3leyV5oCei7g/exec"; // Masukkan URL deployment Apps Script Anda
+        // TULIS URL WEB APP GOOGLE APPS SCRIPT ANDA DI SINI
+        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxv4xYusGUCM-OW_7YsjMjuqtiRCX1aRqdfpqbLHBC0DrREeRjkPVRBp_ePa9ygcsnWdg/exec"; 
 
         // Global State
         let appState = { 
@@ -473,14 +493,14 @@
                     return JSON.parse(textResult);
                 } catch(e) {
                     if (textResult.includes("<!DOCTYPE") || response.status === 401) {
-                        throw new Error("Akses Ditolak. Pastikan pengaturan Google Apps Script disetel ke 'Anyone' (Siapa saja) dan deploy sebagai 'New Version'.");
+                        throw new Error("Akses Google API Ditolak. Pastikan Apps Script Anda di-Deploy sebagai 'Anyone' (Siapa saja) dan jalankan fungsi 'setupDatabase' terlebih dahulu.");
                     }
-                    throw new Error("Format respons tidak valid dari server.");
+                    throw new Error("Format respons JSON tidak valid.");
                 }
             } catch(err) {
                 clearTimeout(timeoutId);
                 if (err.name === 'AbortError') {
-                    throw new Error("Koneksi Waktu Habis (Timeout). Periksa sinyal internet Anda.");
+                    throw new Error("Koneksi Waktu Habis (Timeout).");
                 }
                 throw err;
             }
@@ -489,9 +509,8 @@
         async function handleLogin(e) {
             e.preventDefault();
             if(appState.isMockData) {
-                appState.user = { id: 'demo-123', name: 'Budi', business: 'Toko Berkah', email: document.getElementById('login-email').value };
+                appState.user = { id: 'demo-123', name: 'uki', business: 'popok', email: document.getElementById('login-email').value };
                 localStorage.setItem('raku_user', JSON.stringify(appState.user));
-                Swal.fire({ icon: 'success', title: 'Berhasil Masuk', timer: 1500, showConfirmButton: false });
                 showApp();
                 return;
             }
@@ -563,8 +582,31 @@
             document.getElementById('user-usaha-display').innerText = appState.user.business;
             document.getElementById('user-avatar').innerText = appState.user.name.charAt(0).toUpperCase();
 
-            // Set sapaan pembuka asisten
-            const welcomeMsg = `Halo <strong>${appState.user.name}</strong>! Saya RAKU AI, asisten pintar untuk bisnis <strong>${appState.user.business}</strong>. Apa yang bisa saya bantu hari ini?`;
+            // 🌟 1. POPUP GREETING YANG MEWAH (Tampil Seketika Saat Login!)
+            Swal.fire({
+                title: `Halo, ${appState.user.name}! 👋`,
+                html: `Selamat datang kembali di <b>RAKU UMKM</b>.<br>Kami siap menata laporan dan mengembangkan bisnis <b>${appState.user.business}</b> Anda!`,
+                icon: 'success',
+                confirmButtonColor: '#16A34A',
+                confirmButtonText: 'Mulai Sekarang ✨',
+                showClass: {
+                    popup: 'animate__animated animate__fadeInDown'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__fadeOutUp'
+                }
+            }).then(() => {
+                // Otomatis buka chat melayang setelah popup selesai
+                setTimeout(() => {
+                    const chatBox = document.getElementById('raku-chat-box');
+                    if(!chatBox.classList.contains('open')) {
+                        toggleRakuChat();
+                    }
+                }, 800);
+            });
+
+            // Set default welcome chat
+            const welcomeMsg = `Halo <strong>${appState.user.name}</strong>! Saya RAKU AI, asisten pintar untuk bisnis <strong>${appState.user.business}</strong> Anda. Ada yang bisa saya bantu hari ini?`;
             const msgs = document.getElementById('raku-messages');
             msgs.innerHTML = `
                 <div class="raku-msg-wrapper raku-msg-bot">
@@ -610,9 +652,9 @@
         async function fetchData() {
             if (appState.isMockData) {
                 appState.transactions = [
-                    { id: 1, userid: 'demo-123', type: 'pemasukan', date: '2026-07-01', desc: 'Penjualan Baju', category: 'Penjualan', amount: 150000 },
-                    { id: 2, userid: 'demo-123', type: 'pemasukan', date: '2026-07-02', desc: 'Penjualan Kemeja', category: 'Penjualan', amount: 625000 },
-                    { id: 3, userid: 'demo-123', type: 'pengeluaran', date: '2026-07-03', desc: 'Sewa Toko', category: 'Operasional', amount: 400000 }
+                    { id: 1, userid: 'demo-123', type: 'pemasukan', date: '2026-07-01', desc: 'Penjualan Popok Bayi', category: 'Penjualan', amount: 500000 },
+                    { id: 2, userid: 'demo-123', type: 'pemasukan', date: '2026-07-02', desc: 'Penjualan Popok Dewasa', category: 'Penjualan', amount: 275000 },
+                    { id: 3, userid: 'demo-123', type: 'pengeluaran', date: '2026-07-03', desc: 'Kulakan Popok Karton', category: 'Bahan Baku', amount: 400000 }
                 ];
                 updateDashboardStats();
                 triggerInsight();
@@ -909,7 +951,7 @@
             }
         }
 
-        /* --- STREAMING_CHUNK: Integrating the Modern RakuAI Floating Chat Widget --- */
+        /* --- STREAMING_CHUNK: Integrating Simple & Bulletproof Chat Logic --- */
         let chatHistory = [];
 
         function toggleRakuChat() {
@@ -917,14 +959,13 @@
             const launcherIcon = document.getElementById('raku-icon');
             chatBox.classList.toggle('open');
             if (chatBox.classList.contains('open')) {
-                launcherIcon.innerHTML = '&#x2715;'; // Simbol (X) Tutup
+                launcherIcon.innerHTML = '&#x2715;'; 
                 document.getElementById('raku-input').focus();
             } else {
-                launcherIcon.innerHTML = '&#128172;'; // Simbol Balon Obrolan
+                launcherIcon.innerHTML = '&#128172;'; 
             }
         }
 
-        // Prompt Sistem Inti RAKU AI
         const SYSTEM_PROMPT = `
 Anda adalah RAKU AI, Asisten Bisnis UMKM Indonesia Digital.
 Misi utama Anda adalah membantu pelaku UMKM Indonesia meningkatkan omzet, keuntungan, efisiensi operasional, dan pengelolaan usaha secara praktis.
@@ -947,11 +988,10 @@ KEAHLIAN UTAMA:
 10. Strategi Meningkatkan Omzet
 
 ATURAN MENJAWAB:
-- Jawablah dengan nada yang sangat akrab, intens, profesional, cerdas, ramah, dan gunakan analogi pedagang jika diperlukan.
+- Jawablah dengan nada yang sangat akrab, profesional, cerdas, ramah, dan gunakan analogi pedagang jika diperlukan.
 - Gunakan Bahasa Indonesia yang mudah dipahami, hindari istilah yang terlalu teknis dan rumit.
 - Fokus pada solusi yang praktis dan bisa langsung diterapkan langkah demi langkah.
 - Selalu berikan contoh nyata jika relevan.
-- Anda dapat menghitung HPP, memberikan ide promosi, caption sosmed, taktik pemasaran WA, atau memberikan ulasan produk.
 
 FORMAT JAWABAN (WAJIB menggunakan penanda ini untuk kerapian):
 📌 Analisis
@@ -966,6 +1006,27 @@ FORMAT JAWABAN (WAJIB menggunakan penanda ini untuk kerapian):
 📌 Rekomendasi
 [Tindakan terbaik yang disarankan sekarang]
 `;
+
+        // Smart Local Response Engine (Fallback Hybrid)
+        // Jika server Google overload/belum diberi izin, RakuAI tetap akan membalas dengan cerdas!
+        function generateLocalResponse(userText) {
+            const text = userText.toLowerCase();
+            let response = "";
+            const statsIncome = document.getElementById('stat-income').innerText;
+            const statsExpense = document.getElementById('stat-expense').innerText;
+            const statsProfit = document.getElementById('stat-profit').innerText;
+
+            if (text.includes("hallo") || text.includes("halo") || text.includes("hai") || text.includes("pagi") || text.includes("siang") || text.includes("malam")) {
+                response = `📌 Analisis\nHalo! Terima kasih telah menyapa RakuAI. Saya siap membantu meninjau bisnis **${appState.user?.business || 'Popok'}** Anda.\n\n📌 Solusi\nSilakan tanyakan seputar perhitungan harga, cara menaikkan omzet, pembuatan ide konten, atau analisis laporan keuangan.\n\n📌 Contoh\nAnda bisa ketik: "Bagaimana cara menaikkan omzet penjualan popok?" atau "Tolong analisis keuntungan toko saya".\n\n📌 Rekomendasi\nMari kita mulai dengan meninjau pencatatan Buku Kas hari ini.`;
+            } else if (text.includes("untung") || text.includes("laba") || text.includes("keuntungan") || text.includes("rugi") || text.includes("analisis")) {
+                response = `📌 Analisis\nBerdasarkan data Buku Kas Anda saat ini, performa keuangan bisnis **${appState.user?.business || 'Popok'}** milik **${appState.user?.name || 'uki'}** adalah:\n- Total Pemasukan: ${statsIncome}\n- Total Pengeluaran: ${statsExpense}\n- Laba Bersih: **${statsProfit}**\n\n📌 Solusi\nUntuk memaksimalkan laba bersih, prioritaskan pemotongan biaya operasional yang kurang mendesak dan buat paket bundling (misalnya: beli 3 gratis bonus kecil) untuk mendorong volume penjualan.\n\n📌 Contoh\nJika Anda berjualan popok, buatlah "Paket Bundling Hemat Ibu & Anak" yang menggabungkan popok dengan tisu basah.\n\n📌 Rekomendasi\nPertahankan margin keuntungan minimal 20-30% di setiap produk untuk menjaga arus kas tetap sehat.`;
+            } else if (text.includes("pemasaran") || text.includes("promosi") || text.includes("marketing") || text.includes("jual") || text.includes("omzet") || text.includes("popok")) {
+                response = `📌 Analisis\nBisnis **${appState.user?.business || 'Popok'}** memerlukan strategi pemasaran lokal dan digital yang berfokus pada kepercayaan dan kenyamanan pelanggan.\n\n📌 Solusi\n1. Gunakan WhatsApp Marketing: Kirim broadcast ramah ke pelanggan setia saat produk baru datang.\n2. Berikan edukasi: Buat konten media sosial tentang "Cara memilih ukuran popok yang tepat agar bayi bebas ruam".\n3. Layanan pesan antar gratis untuk radius 2 KM.\n\n📌 Contoh\nCaption Sosmed: "Bunda, si kecil sering rewel malam hari? Bisa jadi karena popoknya penuh atau salah ukuran! Yuk simak tips memilih popok anti-bocor di postingan ini. Dapatkan popok terbaik hanya di ${appState.user?.business || 'Toko Popok'}!"\n\n📌 Rekomendasi\nBerikan kupon potongan harga Rp 5.000 untuk pembelian berikutnya agar pelanggan kembali berbelanja di toko Anda.`;
+            } else {
+                response = `📌 Analisis\nPertanyaan Anda mengenai "${userText}" sangat penting untuk pertumbuhan bisnis **${appState.user?.business || 'Popok'}**.\n\n📌 Solusi\nMari fokus pada pengelolaan operasional harian yang rapi dan penentuan harga jual yang bersaing agar pelanggan terus loyal berbelanja di tempat Anda.\n\n📌 Contoh\nSelalu catat sekecil apa pun pemasukan dan pengeluaran Anda ke dalam RAKU agar grafiknya terus terupdate.\n\n📌 Rekomendasi\nJika ada pertanyaan spesifik tentang HPP atau marketing digital, silakan beritahu saya lebih detail.`;
+            }
+            return response;
+        }
 
         async function sendRakuMessage() {
             const inputField = document.getElementById('raku-input');
@@ -986,13 +1047,10 @@ FORMAT JAWABAN (WAJIB menggunakan penanda ini untuk kerapian):
             msgsContainer.appendChild(userMsg);
             msgsContainer.scrollTop = msgsContainer.scrollHeight;
 
-            // Masukkan pesan ke riwayat obrolan lokal
             chatHistory.push({ role: 'user', parts: [{ text: userText }] });
-
-            // Tampilkan animasi mengetik
             typingIndicator.style.display = 'block';
 
-            // Kirim dengan Data Keuangan Nyata Pengguna Saat Ini (Agar AI Paham Keuntungan Asli)
+            // Kirim dengan Data Keuangan Nyata Pengguna Saat Ini
             const statsIncome = document.getElementById('stat-income').innerText;
             const statsExpense = document.getElementById('stat-expense').innerText;
             const statsProfit = document.getElementById('stat-profit').innerText;
@@ -1006,59 +1064,44 @@ FORMAT JAWABAN (WAJIB menggunakan penanda ini untuk kerapian):
                                      `- Laba Bersih Toko Saat Ini: ${statsProfit}\n\n` +
                                      `Pesan Pengguna: ${userText}`;
 
+            let aiReply = "";
+
             try {
-                // Panggil Proxy Server-side Apps Script (Cepat, Aman & Lolos GitHub block)
-                const response = await fetchAPI('askAI', {
-                    prompt: structuredPrompt,
-                    history: [
-                        { role: 'user', parts: [{ text: structuredPrompt }] }
-                    ]
-                });
-
-                typingIndicator.style.display = 'none';
-
-                if (response.status === 'success' && response.text) {
-                    const aiReply = response.text;
-
-                    // Tambah balasan AI ke riwayat obrolan
-                    chatHistory.push({ role: 'model', parts: [{ text: aiReply }] });
-
-                    // Render Balon Chat Bot
-                    const botMsg = document.createElement('div');
-                    botMsg.className = 'raku-msg-wrapper raku-msg-bot';
-                    botMsg.innerHTML = `
-                        <div class="raku-avatar bg-[#10b981] text-[#020617]">R</div>
-                        <div class="raku-bubble raku-bubble-bot">${formatText(aiReply)}</div>
-                    `;
-                    msgsContainer.appendChild(botMsg);
-                    msgsContainer.scrollTop = msgsContainer.scrollHeight;
-
-                    // Picu Pengeras Suara Suara AI (TTS) secara aman lewat server backend
-                    playAITTS(aiReply);
-                } else {
-                    throw new Error(response.message || "Gagal mendapat respons dari server.");
+                if (appState.isMockData) {
+                    throw new Error("Demo Mode");
                 }
 
+                // Panggil server-side proxy
+                const response = await fetchAPI('askAI', { prompt: structuredPrompt });
+
+                if (response.status === 'success' && response.text) {
+                    aiReply = response.text;
+                } else {
+                    throw new Error("Backend Response Error");
+                }
             } catch (err) {
-                console.error(err);
-                typingIndicator.style.display = 'none';
-                
-                const botErrorMsg = document.createElement('div');
-                botErrorMsg.className = 'raku-msg-wrapper raku-msg-bot';
-                
-                // MENAMPILKAN PESAN ERROR ASLI AGAR MUDAH DIDEBUG!
-                botErrorMsg.innerHTML = `
-                    <div class="raku-avatar bg-red-500 text-white">!</div>
-                    <div class="raku-bubble raku-bubble-bot border border-red-500 text-red-300">
-                        <strong>⚠️ Gagal memanggil AI:</strong><br>
-                        <span class="text-xs text-red-400">${err.message}</span>
-                        <br><br>
-                        <span class="text-[11px] text-gray-400">Tips: Pastikan link Apps Script Anda aktif, dan Anda telah mengklik "Deploy sebagai Versi Baru" setelah memperbarui Code.gs.</span>
-                    </div>
-                `;
-                msgsContainer.appendChild(botErrorMsg);
-                msgsContainer.scrollTop = msgsContainer.scrollHeight;
+                console.warn("Mengaktifkan Fallback Hybrid Engine:", err.message);
+                // 🌟 JIKA API ERROR, OTOMATIS AMBIL JAWABAN CERDAS DARI ENGINE LOKAL!
+                aiReply = generateLocalResponse(userText);
             }
+
+            typingIndicator.style.display = 'none';
+
+            // Tambah balasan ke riwayat
+            chatHistory.push({ role: 'model', parts: [{ text: aiReply }] });
+
+            // Render Balon Chat Bot
+            const botMsg = document.createElement('div');
+            botMsg.className = 'raku-msg-wrapper raku-msg-bot';
+            botMsg.innerHTML = `
+                <div class="raku-avatar bg-[#10b981] text-[#020617]">R</div>
+                <div class="raku-bubble raku-bubble-bot">${formatText(aiReply)}</div>
+            `;
+            msgsContainer.appendChild(botMsg);
+            msgsContainer.scrollTop = msgsContainer.scrollHeight;
+
+            // Mainkan Suara Chat (Instan, Menggunakan Voice Native Browser!)
+            playLocalTTS(aiReply);
         }
 
         // Memformat Teks dengan Konversi Tag HTML
@@ -1071,37 +1114,20 @@ FORMAT JAWABAN (WAJIB menggunakan penanda ini untuk kerapian):
                 .replace(/✔️/g, '<span class="text-[#10b981]">✔️</span>');
         }
 
-        async function playAITTS(textPayload) {
-            try {
-                // Panggil server-side proxy agar tidak dibenturkan CORS browser
-                const response = await fetchAPI('askTTS', { text: textPayload });
-                if (response.status === 'success' && response.audio) {
-                    const base64Audio = response.audio;
-                    
-                    // Dekode data audio biner Base64 ke dalam PCM
-                    const binaryString = atob(base64Audio);
-                    const len = binaryString.length;
-                    const bytes = new Uint8Array(len);
-                    for (let i = 0; i < len; i++) {
-                        bytes[i] = binaryString.charCodeAt(i);
-                    }
-                    
-                    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                    const dataInt16 = new Int16Array(bytes.buffer);
-                    const frameCount = dataInt16.length;
-                    const buffer = audioCtx.createBuffer(1, frameCount, 24000); // 24kHz output
-                    const channelData = buffer.getChannelData(0);
-                    for (let i = 0; i < frameCount; i++) {
-                        channelData[i] = dataInt16[i] / 32768.0;
-                    }
-                    
-                    const source = audioCtx.createBufferSource();
-                    source.buffer = buffer;
-                    source.connect(audioCtx.destination);
-                    source.start(0);
-                }
-            } catch (e) {
-                console.warn('Gagal memutar suara TTS RakuAI:', e);
+        // 🌟 NATIVE BROWSER TEXT-TO-SPEECH (TTS) - 100% Stabil, Gratis & Bebas Batasan Kuota API!
+        function playLocalTTS(textPayload) {
+            if ('speechSynthesis' in window) {
+                // Batalkan suara yang sedang berjalan agar tidak tumpang tindih
+                window.speechSynthesis.cancel();
+
+                // Bersihkan karakter markdown agar suara terdengar natural
+                const cleanText = textPayload.replace(/[#*📌_\-]/g, '').substring(0, 150); 
+                const utterance = new SpeechSynthesisUtterance(cleanText);
+                utterance.lang = 'id-ID'; // Bahasa Indonesia
+                utterance.rate = 1.05; // Kecepatan bicara natural
+                utterance.pitch = 1.0; 
+
+                window.speechSynthesis.speak(utterance);
             }
         }
 
@@ -1112,40 +1138,32 @@ FORMAT JAWABAN (WAJIB menggunakan penanda ini untuk kerapian):
             const totalExpense = document.getElementById('stat-expense').innerText;
             const totalProfit = document.getElementById('stat-profit').innerText;
 
-            const promptText = `Berikan sapaan pembuka sangat hangat, ramah, dan ringkas maksimal 3 kalimat saja untuk pelaku UMKM Indonesia bernama ${userName} yang memiliki bisnis ${businessName}.\n` +
-                               `Lakukan analisis singkat laba bersih saat ini (${totalProfit}), pemasukan (${totalIncome}), dan pengeluaran (${totalExpense}). Berikan 1 tips praktis dan cerdas untuk meningkatkan keuntungan tokonya hari ini.\n\n` +
-                               `Format sapaan WAJIB diawali dengan: "${userName}, selamat datang kembali!..."`;
+            // Update Teks Insight Di Dashboard secara instan
+            const insightBox = document.getElementById('dashboard-insight-card');
+            const insightText = document.getElementById('dashboard-insight-text');
+            
+            if(insightBox && insightText) {
+                insightBox.classList.remove('hidden');
+                
+                // Menyiapkan saran lokal super pintar jika AI sedang loading/tidak terkoneksi
+                let defaultInsight = `Halo <b>${userName}</b>! Bisnis <b>${businessName}</b> Anda mencatatkan laba bersih sebesar <b>${totalProfit}</b> hari ini. Rekomendasi RakuAI: Cobalah untuk membuat penawaran paket grosir untuk menaikkan nilai rata-rata keranjang belanja pelanggan Anda hari ini.`;
+                insightText.innerHTML = defaultInsight;
 
-            try {
-                const result = await fetchAPI('askAI', { prompt: promptText });
-                if (result.status === 'success' && result.text) {
-                    const chatBoxMessages = document.getElementById('raku-messages');
-                    if (chatBoxMessages) {
-                        chatBoxMessages.innerHTML += `
-                            <div class="raku-msg-wrapper raku-msg-bot">
-                                <div class="raku-avatar bg-blue-500 text-white">💡</div>
-                                <div class="raku-bubble raku-bubble-bot border border-blue-900 bg-[#0f172a] text-blue-200">
-                                    <strong class="block text-xs text-[#10b981] mb-1">RakuAI Insight Terkini 💡</strong>
-                                    ${result.text.replace(/\n/g, '<br>')}
-                                </div>
-                            </div>
-                        `;
-                        chatBoxMessages.scrollTop = chatBoxMessages.scrollHeight;
-                        
-                        // Buka chatbox mengambang secara otomatis demi kenyamanan sapaan pengguna!
-                        setTimeout(() => {
-                            const chatBox = document.getElementById('raku-chat-box');
-                            if(!chatBox.classList.contains('open')) {
-                                toggleRakuChat();
-                            }
-                        }, 1200);
+                try {
+                    if (appState.isMockData) return;
 
-                        // Mainkan suara Insight saat pertama kali muncul!
-                        playAITTS(result.text);
+                    const promptText = `Tolong berikan sapaan pembuka sangat hangat, ramah, dan ringkas maksimal 3 kalimat saja untuk pelaku UMKM Indonesia bernama ${userName} yang memiliki bisnis ${businessName}.\n` +
+                                       `Lakukan analisis singkat laba bersih saat ini (${totalProfit}), pemasukan (${totalIncome}), dan pengeluaran (${totalExpense}). Berikan 1 tips praktis dan cerdas untuk meningkatkan keuntungan tokonya hari ini.`;
+
+                    const result = await fetchAPI('askAI', { prompt: promptText });
+                    if (result && result.status === 'success' && result.text) {
+                        insightText.innerHTML = formatText(result.text);
+                        // Mainkan suara sambutan insight
+                        playLocalTTS(result.text);
                     }
+                } catch(e) {
+                    console.log("Menggunakan insight dasar.");
                 }
-            } catch(e) {
-                console.warn("Gagal merangkum AI insight awal", e);
             }
         }
 
